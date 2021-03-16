@@ -1,22 +1,29 @@
 const express = require('express');
 
 const app = express();
+
+app.set('view engine' , 'ejs');
+
 app.listen(3000);
 
 app.get('/' , (req, res) =>{
-    res.sendFile('./views/index.html' ,{root: __dirname});
-});
-app.get('/index' , (req, res) =>{
-    res.redirect('/');
+    const blogs = [
+        {blogTitle : "How to become red coder?"  , content : "Blah Blah Blah Blah Blah Blah Blah "},
+        {blogTitle : "How to become my friend?"  , content : "Blah Blah Blah Blah Blah Blah Blah "},
+        {blogTitle : "How to become SDE in Home?"  , content : "Blah Blah Blah Blah Blah Blah Blah "}
+    ]
+    res.render('index',{title : 'Home' , blogs});
 });
 
+
 app.get('/about' , (req, res) =>{
-    res.sendFile('./views/about.html' ,{root: __dirname});
+    res.render('about',{title : 'About'});
 });
-app.get('/about-me' , (req, res) =>{
-    res.redirect('/about');
+
+app.get('/blogs/create' , (req, res) =>{
+    res.render('create',{title : 'New Blog'});
 });
 
 app.use((req,res) =>{
-    res.status(404).sendFile('./views/404.html' ,{root: __dirname});
+    res.status(404).render('404',{title : '404'});
 })
