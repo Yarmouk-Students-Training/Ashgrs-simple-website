@@ -1,5 +1,5 @@
 const Blog = require('../models/blogs');
-
+// just test
 const blog_index = (req,res) =>{
     Blog.find()
         .then(result=>{
