@@ -5,7 +5,7 @@
         padding: 0 20px;
         font-family: 'Noto Serif', serif;
         max-width: 1200px;
-        background-color: #263238;
+        background-color: #e0e7ea;
       }
       p, h1, h2, h3, a, ul{
         margin: 0;
@@ -19,19 +19,19 @@
         margin: 0;
         padding: 0;
         text-decoration: none;
-        color: #ddd;
+        color: #353535;
       }
       .main{
-        color: white;
+        color: #353535;
       }
       .content{
-        color: white;
+        color: #353535;
         padding: 10px;
         margin: 2px;
       }
       .about-content p{
         text-align: center  ;
-        color: white;
+        color: #353535;
         font-size: 30px;
       }
 
@@ -41,7 +41,7 @@
         justify-content: space-between;
         margin-bottom: 60px;
         padding-bottom: 10px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #000;
         text-transform: uppercase;
       }
       nav ul{
@@ -57,7 +57,7 @@
         font-size: 3em;
       }
       nav p, nav a{
-        color: rgb(233, 229, 229);
+        color: rgb(0, 0, 0);
         font-weight: 300;
       }
       nav a:hover{
@@ -99,7 +99,7 @@
         padding: 12px;
       }
       .create-blog label{
-        color: rgb(233, 229, 229);
+        color: #353535;
         display: block;
         margin-top: 24px;
       }
@@ -145,6 +145,13 @@
       color:white;
       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
-    #fuk{
-      border: 30px white;
+    .details .content p{
+      color:#353535;
+    }
+    .create-blog span{
+      margin-left: 38%;
+      margin-bottom: 80%;
+      background-color:palevioletred;
+      border: 3px red;
+      padding: 15px;
     }
