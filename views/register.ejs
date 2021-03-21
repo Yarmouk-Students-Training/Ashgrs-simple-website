@@ -2,6 +2,7 @@
     <%- include('./partials/head.ejs')%>
 <body>
     <%- include('./partials/nav.ejs')%>
+    <p> <%= err_msg%> </p>
     <div class="create-blog content">
         <form action="/register" method="POST">
           <label for="fullName">Full Name:</label>

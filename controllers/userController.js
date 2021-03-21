@@ -1,7 +1,7 @@
 const User = require('../models/users');
 
 const register_get = (req,res) =>{
-    res.render('register' , {title:"Register"});
+    res.render('register' , {title:"Register" , err_msg :null});
 }
 
 const register_get_err = (req,res) =>{
@@ -11,13 +11,16 @@ const register_get_err = (req,res) =>{
 const register_post = (req,res) =>{
     User.findOne({email:req.body.email}).then(user=>{
         if(user){
-            res.redirect('/registerError');
+            res.render('register' , {title:"Register" , err_msg :"Email is already used"});
         }
     })
     const user = new User(req.body);
+    if(req.body.pass != req.body.rePass){
+        res.render('register' , {title:"Register" , err_msg :"Password not match"});
+    }
     user.save()
         .then(()=>{
-            res.redirect('/blogs')
+            res.render('register' , {title:"Register" , err_msg :"Registered successfully"});
         })
         .catch((err)=>{
             console.log(err);
