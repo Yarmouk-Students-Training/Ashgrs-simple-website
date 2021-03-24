@@ -14,19 +14,25 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(post);
       this.hasMany(comment);
       this.belongsToMany(this,{through:friendship,as:'sender' ,foreignKey:'reciver'})
-    }
+    } 
   };
   user.init({
     name: {
       type:DataTypes.STRING,
-      allowNull:false
+      allowNull:false,
+      isAlpha: true
     },
     email:{
       type:DataTypes.STRING,
       primaryKey:true,
-      allowNull:false,
       validate:{
         isEmail:true
+      }
+    },
+    country:{
+      type:DataTypes.STRING,
+      validate:{
+        isAlpha: true,
       }
     }
   }, {
