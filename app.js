@@ -1,48 +1,89 @@
-// import 3rd party packages
-const express = require('express');
-const morgan = require('morgan');
-const mongoose = require('mongoose');
-const blogRoutes = require('./routes/blogRoutes');
-const userRoutes = require('./routes/userRoutes');
-const { forEach } = require('lodash');
+const express = require("express")
+const { sequelize} = require('./models')
+const models = require("./models")
 
+const app = express()
+app.use(express.json())
 
-// creating app and connecting database
-//81.253.108.82
-const app = express();
-const db_uri = 'mongodb+srv://ashgr:ashgr123@node-tutorial.0wsmi.mongodb.net/nodejs-pilot?retryWrites=true&w=majority';
+// create user
+app.post('/user', async (req, res) => {
+    const { name, email, country } = req.body
+    try{
+      const newUser = await models.user.create({ name, email, country })
+      return res.json(newUser)
+    } 
+    catch (err) {
+      console.log(err)
+      return res.status(500).json(err)
+    }
+})
 
-mongoose.connect(db_uri , {useNewUrlParser:true , useUnifiedTopology:true})
-    .then((result)=>{
-        console.log("=== Database connected successfully ===");
-        app.listen(3000);
-    })
-    .catch((err)=>console.log(err));
+// get all users
+app.get('/user', async (req, res) => {
+    try {
+      const users = await models.user.findAll()
+      return res.json(users)
+    } 
+    catch (err) {
+      console.log(err)
+      return res.status(500).json({ error: 'Something went wrong' })
+    }
+})
 
-// setup view engine
-app.set('view engine' , 'ejs');
-app.use(express.static('public'));
-app.use(express.urlencoded());
-app.use(morgan('dev'));
+// get a specifc user
+app.get('/user/:email', async (req, res) => {
+    const mail = req.params.email
+    try {
+      const user = await models.user.findOne({
+        where: { mail },
+      })
+      return res.json(user)
+    } 
+    catch (err) {
+      console.log(err)
+      return res.status(500).json({ error: 'Something went wrong' })
+    }
+})
 
-// express app pages
+// delete a specifc user
+app.delete('/user/:email', async (req, res) => {
+    const email = req.params.email
+    try {
+      const user = await models.user.findOne({ where: { email } })
+      await user.destroy()
+  
+      return res.json({ message: 'User deleted!' })
+    } 
+    catch (err) {
+      console.log(err)
+      return res.status(500).json({ error: 'Something went wrong' })
+    }
+})
 
-app.get('/' , (req, res) =>{
-    res.redirect('/blogs');
-});
+// update a specifc user
+app.put('/user/:email', async (req, res) => {
+    const email = req.params.email
+    console.log(email)
+    const { new_name, new_email, new_country } = req.body
+    try {
+      const user = await models.user.findOne({ where: { email } })
+  
+      user.name = new_name
+      user.email = new_email
+      user.country = new_country
+        
+      await user.save()
+  
+      return res.json(user)
+    } 
+    catch (err) {
+      console.log(err)
+      return res.status(500).json({ error: 'Something went wrong' })
+    }
+})
 
-app.get('/login' ,(req,res) =>{
-    res.render('login' , {title:"Login"});
-});
-
-app.get('/about' , (req, res) =>{
-    res.render('about',{title : 'About'});
-});
-
-app.use('/blogs',blogRoutes);
-
-app.use(userRoutes)
-
-app.use((req,res) =>{
-    res.status(404).render('404',{title : '404'});
-});
+app.listen({ port: 5000 }, async () => {
+  console.log('Server up on http://localhost:5000')
+  await sequelize.authenticate()
+  console.log('Database Connected!')
+})
