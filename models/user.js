@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({post , comment,friendship}) {
       // define association here
-      this.hasMany(post);
-      this.hasMany(comment);
+      this.hasMany(post , {foreignKey:"userEmail"});
+      this.hasMany(comment , {foreignKey:"userEmail"});
       this.belongsToMany(this,{through:friendship,as:'sender' ,foreignKey:'reciver'})
     } 
   };
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false,
       isAlpha: true
     },
-    email:{
+    userEmail:{
       type:DataTypes.STRING,
       primaryKey:true,
       validate:{

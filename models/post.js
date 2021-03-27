@@ -11,19 +11,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({user , comment , reaction}) {
       // define association here
-      this.belongsTo(user)
-      this.hasMany(comment)
+      this.belongsTo(user,{foreignKey:'userEmail'})
+      this.hasMany(comment,{foreignKey:'post_id'})
       this.hasMany(reaction)
     }
   };
   post.init({
-    post_id:{
+    userEmail:{
       type:DataTypes.STRING,
-      primaryKey:true
+      validate:{
+        isEmail:true
+      }
+    },
+    post_id:{
+      type:DataTypes.INTEGER,
+      primaryKey:true,
     },
     content:{
       type: DataTypes.STRING
-    }
+    },
   }, {
     sequelize,
     modelName: 'post',

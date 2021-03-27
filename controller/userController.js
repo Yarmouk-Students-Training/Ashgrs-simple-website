@@ -2,9 +2,9 @@ const models = require('../models');
 
 // create user
 const createUser = async (req, res) => {
-    const { name, email, country } = req.body
+    const { name, userEmail, country } = req.body
     try{
-      const newUser = await models.user.create({ name, email, country })
+      const newUser = await models.user.create({ name, userEmail, country })
       return res.json(newUser)
     } 
     catch (err) {
