@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({user}) {
       // define association here
-      this.hasOne(user , {foreignKey:"userEmail"});
+      this.belongsTo(user , {foreignKey:"userEmail"});
     }
   };
   tokens.init({
