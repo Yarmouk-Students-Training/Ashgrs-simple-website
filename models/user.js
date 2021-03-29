@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(post , {foreignKey:"userEmail"});
       this.hasMany(comment , {foreignKey:"userEmail"});
       this.belongsToMany(this,{through:friendship,as:'sender' ,foreignKey:'reciver'})
-      this.belongsTo(tokens , {foreignKey:"userEmail"})
+      this.hasOne(tokens , {foreignKey:"userEmail"})
     } 
   };
   user.init({
