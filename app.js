@@ -11,27 +11,54 @@ const friendRouter = require('./router/friendRouter.js')
 const app = express()
 app.use(express.json())
 
-app.get('/api' , (req,res)=>{
-  return res.json({
-    messege : "we are in api route (:"
-  })
+app.get('/tokens' , async (req,res)=>{
+  try {
+    const Tokens = await models.tokens.findAll()
+    return res.json(Tokens)
+  } 
+  catch (err) {
+    console.log(err)
+    return res.status(500).json({ error: 'Something went wrong' })
+  }
 })
 
-app.post('/api/login', (req, res) => {
-  const user = {
-    id: 1, 
-    username: 'fake',
-    email: 'fake@gmail.com'
-  }
-
-  jwt.sign({user}, 'secretkey', (err, token) => {
-    res.json({
-      token
+app.post('/login', async (req, res) => {
+  const userEmail = req.body.email
+  const User = models.user.findOne({ where:{userEmail} });
+  if(User !== undefined){
+    const flag = models.tokens.findOne({where:{userEmail}});
+    if(flag){
+      return res.json({msg: "Token already exist for this user" })
+    }
+    jwt.sign({userEmail}, 'secretkey', (err, token) => {
+        const newToken = models.tokens.create({userEmail, token });
+        return res.json({msg: "Token created successfuly" , newToken})
     });
-  });
+  }
+  else return res.json({msg: "some error happened"})
 });
 
-app.post('/api/posts', verifyToken, (req, res) => {  
+app.post('/logout' , async (req,res)=>{
+  const userEmail = req.body.email;
+  const User = models.user.findOne({ where:{userEmail} });
+  if(User !== undefined){
+    const flag = await models.tokens.findOne({where:{userEmail}});
+    // console.log("==============")
+    // console.log(flag);
+    // console.log(User);
+    // console.log("==============")
+    if(flag){
+      flag.destroy();
+      return res.json({msg :"token deleted"});
+    }
+    else{
+      return res.json({msg :"user token does not exist"});
+    }
+  }
+  else return res.json({msg: "some error happened"})
+})
+
+app.post('/api/posts', verifyToken, async (req, res) => {  
     jwt.verify(req.token, 'secretkey', (err, authData) => {
     if(err) {
       res.sendStatus(403);
