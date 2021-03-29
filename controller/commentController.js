@@ -1,5 +1,11 @@
-const { comment , post } = require('../models') 
-
+const { comment , post , tokens } = require('../models') 
+function findToken(email){
+    const user = tokens.findOne({where:{email}});
+    if(user!==undefined){
+        return true;
+    }
+    return false;
+}
 const commentCreate = async(req,res)=>{
     const {comment_id,post_id , body} = req.body;
     console.log("================")
@@ -9,6 +15,10 @@ const commentCreate = async(req,res)=>{
         const Post = await post.findOne({where:{post_id}});
         console.log("================")
         const userEmail = Post.userEmail; 
+        if(findToken(userEmail) == false){
+            const msg = "user didnt logged in !!";
+            return res.status(500).json(msg);
+        }
         console.log(userEmail)
         console.log("================")
         const Comment= await comment.create({post_id,userEmail,comment_id  , body});

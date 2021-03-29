@@ -1,4 +1,12 @@
-const { post } = require('../models') 
+const { post , tokens } = require('../models') 
+
+function findToken(email){
+    const user = tokens.findOne({where:{email}});
+    if(user !== undefined){
+        return true;
+    }
+    return false;
+}
 
 const getPosts = async(req,res)=>{
     try {
@@ -14,6 +22,10 @@ const getPosts = async(req,res)=>{
 const createPost = async(req,res)=>{
     const {userEmail , post_id , content} = req.body;
     console.log(req.body)
+    if(findToken(userEmail) == false){
+        const msg = "user didnt logged in !!";
+        return res.status(500).json(msg);
+    }
     try {
         await post.create({userEmail , post_id , content});
         return res.json("Post created successfully");
